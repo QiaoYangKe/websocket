@@ -1,8 +1,8 @@
 const getters = {
-  accessToken: state => state.user.token,
-  encryptedAccessToken: state => state.user.token,
-  expireInSeconds: state => state.user.token,
-  userId: state => state.user.token,
+  accessToken: state => state.tokenAuth.accessToken,
+  encryptedAccessToken: state => state.tokenAuth.encryptedAccessToken,
+  expireInSeconds: state => state.tokenAuth.expireInSeconds,
+  userId: state => state.tokenAuth.userId,
 
   user: state => state.session.user,
   tenant: state => state.session.tenant,

@@ -16,7 +16,7 @@ const tokens = {
 
 export default [
   {
-    url: '/api/TokenAuth/Authenticate',
+    url: '/TokenAuth/Authenticate',
     type: 'post',
     response: config => {
       const { userNameOrEmailAddress } = config.body

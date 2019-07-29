@@ -1,9 +1,8 @@
 export default [
   {
-    url: '/api/services/app/Session/GetCurrentLoginInformations',
+    url: '/services/app/Session/GetCurrentLoginInformations',
     type: 'get',
     response: config => {
-      console.log(config)
       return {
         'result': {
           'application': {
@@ -24,7 +23,7 @@ export default [
         'success': true,
         'error': null,
         'unAuthorizedRequest': false,
-        '__abp': true
+        '__almes': true
       }
     }
   }

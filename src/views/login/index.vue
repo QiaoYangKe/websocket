@@ -45,7 +45,7 @@
 
       <div class="tips">
         <span style="margin-right:20px;">用户名：admin</span>
-        <span>密码：qwe123</span>
+        <span>密码：123qwe</span>
       </div>
 
     </el-form>
@@ -74,7 +74,7 @@ export default {
     return {
       loginForm: {
         userNameOrEmailAddress: 'admin',
-        password: 'qwe123',
+        password: '123qwe',
         rememberClient: false
       },
       loginRules: {

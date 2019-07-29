@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { MessageBox, Message } from 'element-ui'
+import { Message } from 'element-ui'
 import store from '@/store'
 import { getAccessToken } from '@/utils/auth'
 
@@ -15,7 +15,7 @@ service.interceptors.request.use(
   config => {
     // do something before request is sent
 
-    if (store.getters.token) {
+    if (store.getters.accessToken) {
       // let each request carry token
       // ['Authorization'] is a custom headers key
       // please modify it according to the actual situation
@@ -44,7 +44,6 @@ service.interceptors.response.use(
    */
   response => {
     const res = response.data
-
     if (!res.success) {
       Message({
         message: res.error.message || 'Error',
