@@ -3,7 +3,8 @@ import Vuex from 'vuex'
 import getters from './getters'
 import app from './modules/app'
 import settings from './modules/settings'
-import user from './modules/user'
+import tokenAuth from './modules/token-auth'
+import session from './modules/session'
 
 Vue.use(Vuex)
 
@@ -11,7 +12,8 @@ const store = new Vuex.Store({
   modules: {
     app,
     settings,
-    user
+    tokenAuth,
+    session
   },
   getters
 })

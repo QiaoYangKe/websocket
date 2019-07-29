@@ -6,15 +6,15 @@
         <h3 class="title">明泰铝业生产管理系统</h3>
       </div>
 
-      <el-form-item prop="userName">
+      <el-form-item prop="userNameOrEmailAddress">
         <span class="svg-container">
           <svg-icon icon-class="user" />
         </span>
         <el-input
-          ref="userName"
-          v-model="loginForm.userName"
-          placeholder="UserName"
-          name="userName"
+          ref="userNameOrEmailAddress"
+          v-model="loginForm.userNameOrEmailAddress"
+          placeholder="用户名"
+          name="userNameOrEmailAddress"
           type="text"
           tabindex="1"
           auto-complete="on"
@@ -57,7 +57,7 @@
 export default {
   name: 'Login',
   data() {
-    const validateUserName = (rule, value, callback) => {
+    const validateUserNameOrEmailAddress = (rule, value, callback) => {
       if (value.length === 0) {
         callback(new Error('请输入用户名！'))
       } else {
@@ -73,11 +73,12 @@ export default {
     }
     return {
       loginForm: {
-        userName: 'admin',
-        password: 'qwe123'
+        userNameOrEmailAddress: 'admin',
+        password: 'qwe123',
+        rememberClient: false
       },
       loginRules: {
-        userName: [{ required: true, trigger: 'blur', validator: validateUserName }],
+        userNameOrEmailAddress: [{ required: true, trigger: 'blur', validator: validateUserNameOrEmailAddress }],
         password: [{ required: true, trigger: 'blur', validator: validatePassword }]
       },
       loading: false,
@@ -108,7 +109,7 @@ export default {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
-          this.$store.dispatch('user/login', this.loginForm).then(() => {
+          this.$store.dispatch('tokenAuth/authenticate', this.loginForm).then(() => {
             this.$router.push({ path: this.redirect || '/' })
             this.loading = false
           }).catch(() => {

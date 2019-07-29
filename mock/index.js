@@ -1,11 +1,13 @@
 import Mock from 'mockjs'
 import { param2Obj } from '../src/utils'
 
-import user from './user'
-import table from './table'
+import tokenAuth from './modules/token-auth'
+import session from './modules/session'
+import table from './modules/table'
 
 const mocks = [
-  ...user,
+  ...tokenAuth,
+  ...session,
   ...table
 ]
 

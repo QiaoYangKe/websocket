@@ -1,6 +1,6 @@
 module.exports = {
 
-  title: 'Vue Admin Template',
+  title: 'almes-web-client',
 
   /**
    * @type {boolean} true | false
