@@ -3,11 +3,15 @@ import { param2Obj } from '../src/utils'
 
 import tokenAuth from './modules/token-auth'
 import session from './modules/session'
+
+import workCenter from './modules/equipment-management/work-center'
+
 import table from './modules/table'
 
 const mocks = [
   ...tokenAuth,
   ...session,
+  ...workCenter,
   ...table
 ]
 

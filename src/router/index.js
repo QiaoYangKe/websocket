@@ -54,7 +54,22 @@ export const constantRoutes = [
       meta: { title: 'Dashboard', icon: 'dashboard' }
     }]
   },
-
+  {
+    path: '/production-task',
+    component: Layout,
+    name: 'ProductionTask',
+    alwaysShow: true,
+    redirect: 'noRedirect',
+    meta: { title: '生产任务', icon: 'example' },
+    children: [
+      {
+        path: 'finished-product-dispatch',
+        name: 'FinishedProductDispatch',
+        component: () => import('@/views/production-task/finished-product-dispatch/index'),
+        meta: { title: '成品派工', icon: 'example' }
+      }
+    ]
+  },
   {
     path: '/example',
     component: Layout,
