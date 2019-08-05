@@ -5,6 +5,7 @@ import tokenAuth from './modules/token-auth'
 import session from './modules/session'
 
 import workCenter from './modules/equipment-management/work-center'
+import productionOrderDispatch from './modules/production-task/production-order-dispatch'
 
 import table from './modules/table'
 
@@ -12,7 +13,8 @@ const mocks = [
   ...tokenAuth,
   ...session,
   ...workCenter,
-  ...table
+  ...table,
+  ...productionOrderDispatch
 ]
 
 // for front mock

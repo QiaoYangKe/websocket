@@ -67,6 +67,11 @@ export const constantRoutes = [
         name: 'FinishedProductDispatch',
         component: () => import('@/views/production-task/finished-product-dispatch/index'),
         meta: { title: '成品派工', icon: 'example' }
+      }, {
+        path: 'production-order-dispatch',
+        name: 'productionOrderDispatchh',
+        component: () => import('@/views/production-task/production-order-dispatch/index'),
+        meta: { title: '订单派发', icon: 'example' }
       }
     ]
   },
