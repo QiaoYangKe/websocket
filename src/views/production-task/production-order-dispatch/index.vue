@@ -133,7 +133,7 @@
         >
           <template slot-scope="scope">
             <div v-if="item.props === 'branchFactoryDate' || item.props === 'dispatchDate'">
-              {{ scope.row[item.props] | parseTime('{y}-{m}-{d} {h}:{i}:') }}
+              {{ scope.row[item.props] | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}
             </div>
             <div v-else-if="item.props === 'finishDate'">
               {{ scope.row[item.props] | parseTime('{y}-{m}-{d}') }}
