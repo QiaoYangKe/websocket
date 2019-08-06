@@ -1,14 +1,14 @@
 <template>
   <el-container>
-    <el-header class="factory-header">
+    <el-header class="factory-header" height="40px">
       <el-select
         v-model="branchFactory"
+        size="mini"
         value-key="id"
         :loading="branchFactoryListLoading"
         loading-text="加载中..."
         placeholder="请选择分厂"
         class="factory-select"
-        @change="handleBranchFactoryChange()"
       >
         <el-option
           v-for="item in branchFactoryList"
@@ -17,14 +17,17 @@
           :value="item"
         />
       </el-select>
-      <el-button @click="changeBranchFactory">批量更改</el-button>
-      <el-button @click="comfirmBranchFactory">确认下发</el-button>
-      <el-button @click="comfirmBranchFactory">订单转移</el-button>
+      <el-button size="mini" type="primary" plain :disabled="orderTranction" @click="changeBranchFactory"><i class="el-icon-notebook-2" /> 批量更改</el-button>
+      <el-button size="mini" type="primary" plain :disabled="orderTranction" @click="confirmDispatchTask"><i class="el-icon-check" /> 确认下发</el-button>
+      <el-button size="mini" type="primary" plain :disabled="!orderTranction" @click="orderTranctionTask"><i class="el-icon-edit" /> 订单转移</el-button>
+      <div class="status-style-class">
+        标识：<el-button size="mini" style="background: #F56C6C">关闭</el-button><el-button size="mini" style="background: #E6A23C">更改</el-button>
+      </div>
     </el-header>
     <el-main>
-      <el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-width="100px" class="demo-ruleForm">
-        <el-row :gutter="10" style="width: 100%">
-          <el-col :span="8">
+      <el-form ref="ruleForm" size="mini" :model="ruleForm" :rules="rules" label-width="100px" class="demo-ruleForm search-form">
+        <el-row :gutter="10" style="width: 100%" class="el-row-style">
+          <el-col :span="10">
             <el-form-item label="订单日期" required>
               <el-col :span="11">
                 <el-form-item prop="dateStart">
@@ -39,14 +42,14 @@
               </el-col>
             </el-form-item>
           </el-col>
-          <el-col :span="4">
+          <el-col :span="5">
             <el-form-item label="合同编号" prop="orderNo">
               <el-input v-model="ruleForm.orderNo" />
             </el-form-item>
           </el-col>
-          <el-col :span="4">
-            <el-form-item label="下发分厂" prop="factory">
-              <el-select v-model="ruleForm.factory" :loading="branchFactoryListLoading" placeholder="请选择下发分厂" loading-text="加载中..." @change="query('ruleForm')">
+          <el-col :span="6">
+            <el-form-item label="下发分厂" prop="factory" style="margin-left: 50px">
+              <el-select v-model="ruleForm.factory" clearable :loading="branchFactoryListLoading" placeholder="请选择下发分厂" loading-text="加载中..." @change="query()">
                 <el-option
                   v-for="item in branchFactoryList"
                   :key="item.id"
@@ -56,21 +59,21 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="4">
+          <el-col :span="1">
             <el-form-item>
-              <el-button type="primary" @click="query('ruleForm')">查询</el-button>
+              <el-button type="primary" @click="query()">查询</el-button>
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row :gutter="10" style="width: 100%">
-          <el-col :span="4">
+        <el-row :gutter="10" style="width: 100%" class="el-row-style">
+          <el-col :span="5">
             <el-form-item label="合金牌号" prop="alloyGrade">
               <el-input v-model="ruleForm.alloyGrade" />
             </el-form-item>
           </el-col>
-          <el-col :span="4">
-            <el-form-item label="订单来源" prop="orderSource" @change="query('ruleForm')">
-              <el-select v-model="ruleForm.orderSource" :loading="orderSourceLoading" placeholder="请选择订单来源" loading-text="加载中...">
+          <el-col :span="6">
+            <el-form-item label="订单来源" prop="orderSource" @change="query()">
+              <el-select v-model="ruleForm.orderSource" clearable :loading="orderSourceLoading" placeholder="请选择订单来源" loading-text="加载中...">
                 <el-option
                   v-for="item in orderSourceList"
                   :key="item.id"
@@ -80,23 +83,23 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="4">
+          <el-col :span="5">
             <el-form-item label="是否下发" prop="dispatch">
-              <el-radio-group v-model="ruleForm.dispatch" @change="query('ruleForm')">
-                <el-radio label="是" :value="true" />
-                <el-radio label="否" :value="false" />
+              <el-radio-group v-model="ruleForm.dispatch" @change="dispatchChange(ruleForm.dispatch)">
+                <el-radio :label="true">是</el-radio>
+                <el-radio :label="false">否</el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
-          <el-col :span="4">
-            <el-form-item label="是否确认" prop="comfirm" @change="query('ruleForm')">
-              <el-select v-model="ruleForm.comfirm" clearable placeholder="请选择">
+          <el-col :span="5">
+            <el-form-item label="是否确认" prop="confirm" @change="query()">
+              <el-select v-model="ruleForm.confirm" clearable placeholder="请选择">
                 <el-option label="是" :value="true" />
                 <el-option label="否" :value="false" />
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="4">
+          <el-col :span="1">
             <el-form-item>
               <el-button @click="resetForm('ruleForm')">重置</el-button>
             </el-form-item>
@@ -108,13 +111,15 @@
         :data="tableData"
         tooltip-effect="dark"
         style="width: 100%"
+        :row-class-name="tableRowClassName"
         border
         @selection-change="handleSelectionChange"
         @row-click="clickRow"
       >
         <el-table-column
           type="selection"
-          width="50"
+          width="40px"
+          align="center"
         />
         <el-table-column
           v-for="item in cols"
@@ -122,6 +127,7 @@
           :prop="item.props"
           :label="item.label"
           :width="item.width"
+          :align="item.align"
           :fixed="item.fixed"
           :show-overflow-tooltip="true"
         >
@@ -132,8 +138,30 @@
             <div v-else-if="item.props === 'finishDate'">
               {{ scope.row[item.props] | parseTime('{y}-{m}-{d}') }}
             </div>
+            <div v-else-if="item.props === 'confirm'">
+              <span>{{ scope.row.confirm === 1 ? '是' : '否' }}</span>
+            </div>
+            <div v-else-if="item.props === 'dispatch'">
+              <span>{{ scope.row.dispatch === 1 ? '是' : '否' }}</span>
+            </div>
             <div v-else-if="item.props === 'factory'">
-              <span :id="&quot;span_&quot;+scope.row.id" @click="changeToSelect(('span_'+scope.row.id), scope.row)">{{ scope.row[item.props] }}</span>
+              <div v-if="!scope.row.showFlag" :id="'span_'+item.id" @click="changeToSelect(scope.row)">{{ scope.row[item.props] }}</div>
+              <el-select
+                v-else
+                v-model="scope.row.factory"
+                value-key="id"
+                :loading="branchFactoryListLoading"
+                loading-text="加载中..."
+                placeholder="请选择分厂"
+                @change="((val)=>{handleBranchFactoryChange(val, scope.row)})"
+              >
+                <el-option
+                  v-for="th in branchFactoryList"
+                  :key="th.id"
+                  :label="th.name"
+                  :value="th"
+                />
+              </el-select>
             </div>
             <div v-else>
               <span>{{ scope.row[item.props] }}</span>
@@ -148,7 +176,7 @@
 
 <script>
 import { parseTime } from '@/utils'
-import { getBranchFactoryList, updateBranchFactoryList } from '@/api/production-task/production-order-dispatch'
+import { getBranchFactoryList, confirmDispatch, getOrderSourceList, queryOrderList, orderTranction } from '@/api/production-task/production-order-dispatch'
 import Pagination from '@/components/Pagination/index.vue'
 export default {
   name: 'ProductionOrderDispatch',
@@ -172,55 +200,13 @@ export default {
         name: ''
       },
       branchFactoryList: undefined,
-      total: 12,
+      total: 0,
       multipleSelection: [],
+      orderTranction: false,
       branchFactoryListLoading: true,
       orderSourceLoading: true,
-      orderSourceList: [
-        {
-          id: 1,
-          name: '订单来源1'
-        }],
-      tableData: [
-        {
-          id: 1,
-          factory: 'aaa',
-          deliveryOrganization: 'aaa',
-          salesman: 'aa',
-          production: 'aa',
-          orderNo: 'a',
-          purpose: 'a',
-          alloyGrade: 'a',
-          status: 'a',
-          specifications: 'a',
-          number: 2,
-          slices: '',
-          dispatch: '1',
-          destinationLocation: 'a',
-          dispatchDate: new Date(),
-          comfirm: 'a',
-          branchFactoryDate: new Date().getTime(),
-          finishDate: new Date().getTime()
-        }, {
-          id: 2,
-          factory: 'aaa',
-          deliveryOrganization: 'aaa',
-          salesman: 'aa',
-          production: 'aa',
-          orderNo: 'a',
-          purpose: 'a',
-          alloyGrade: 'a',
-          status: 'a',
-          specifications: 'a',
-          number: 2,
-          slices: '',
-          dispatch: '1',
-          destinationLocation: 'a',
-          dispatchDate: new Date(),
-          comfirm: 'a',
-          branchFactoryDate: new Date().getTime(),
-          finishDate: new Date().getTime()
-        }],
+      orderSourceList: [],
+      tableData: [],
       ruleForm: {
         orderNo: undefined,
         factory: undefined,
@@ -229,7 +215,7 @@ export default {
         alloyGrade: undefined,
         orderSource: undefined,
         dispatch: undefined,
-        comfirm: undefined,
+        confirm: undefined,
         page: 1,
         limit: 10
       },
@@ -285,7 +271,7 @@ export default {
           label: '合金牌号'
         },
         {
-          props: 'status',
+          props: 'alloyTemper',
           label: '状态',
           width: '120px'
         },
@@ -296,15 +282,19 @@ export default {
         },
         {
           props: 'number',
-          label: '数量'
+          label: '数量',
+          width: '60px'
         },
         {
           props: 'slices',
-          label: '片数'
+          label: '片数',
+          width: '60px'
         },
         {
           props: 'dispatch',
-          label: '下发'
+          label: '下发',
+          width: '60px',
+          align: 'center'
         },
         {
           props: 'destinationLocation',
@@ -317,8 +307,10 @@ export default {
           width: '120px'
         },
         {
-          props: 'comfirm',
-          label: '确认'
+          props: 'confirm',
+          label: '确认',
+          width: '60px',
+          align: 'center'
         },
         {
           props: 'branchFactoryDate',
@@ -334,45 +326,104 @@ export default {
   },
   mounted() {
     this.branchFactoryListInit()
+    this.orderSourceInit()
+    this.query(this.ruleForm)
   },
   methods: {
-    handleBranchFactoryChange() {
-      // alert(this.branchFactory.name)
+    tableRowClassName({ row, rowIndex }) {
+      if (row.status === 1) {
+        return 'close-row'
+      } else if (row.status === 2) {
+        return 'waring-row'
+      }
+      return ''
+    },
+    branchFactoryListInit() {
+      getBranchFactoryList().then(response => {
+        this.branchFactoryList = response.result
+        this.branchFactoryListLoading = false
+      })
+    },
+    orderSourceInit() {
+      getOrderSourceList().then(response => {
+        // console.log(response)
+        this.orderSourceList = response.result
+        this.orderSourceLoading = false
+      })
+    },
+    dispatchChange(val) {
+      this.orderTranction = val
+      this.query(this.ruleForm)
+    },
+    changeToSelect(row) {
+      for (let i = 0; i < this.tableData.length; i++) {
+        if (this.tableData[i].showFlag && this.tableData[i].id !== row.id) {
+          this.tableData[i].showFlag = false
+        }
+      }
+      row.showFlag = true
+    },
+    handleBranchFactoryChange(val, row) {
+      row.factoryId = val.id
+      row.factory = val.name
+      row.showFlag = false
     },
     clickRow(row) {
       this.$refs.orderTable.toggleRowSelection(row)
     },
-    comfirmBranchFactory() {
+    confirmDispatchTask() {
       if (this.multipleSelection.length < 1) {
         this.$notify({
           title: '请至少选择一个',
           type: 'warning'
         })
       }
-      updateBranchFactoryList(this.multipleSelection).then(response => {
+      const data = []
+      const temp = this.multipleSelection
+      for (let i = 0; i < temp.length; i++) {
+        data.push({
+          id: temp.id,
+          factoryId: temp.factoryId
+        })
+      }
+      confirmDispatch(data).then(response => {
         this.$notify({
           title: '下发成功',
           type: 'success'
         })
       })
     },
-    changeToSelect(str, row) {
-      console.log(row)
-      alert(str)
-    },
-    branchFactoryListInit() {
-      getBranchFactoryList().then(response => {
-        this.branchFactoryList = response.result
-        console.log(response)
-        this.branchFactoryListLoading = false
+    orderTranctionTask() {
+      if (this.multipleSelection.length < 1) {
+        this.$notify({
+          title: '请至少选择一个',
+          type: 'warning'
+        })
+      }
+      const data = []
+      const temp = this.multipleSelection
+      for (let i = 0; i < temp.length; i++) {
+        data.push({
+          id: temp.id,
+          factoryId: temp.factoryId
+        })
+      }
+      orderTranction(data).then(response => {
+        this.$notify({
+          title: '转移成功',
+          type: 'success'
+        })
       })
     },
-    query(formName) {
-      this.$refs[formName].validate((valid) => {
+    query() {
+      this.$refs.ruleForm.validate((valid) => {
         if (valid) {
-          alert('submit!')
+          queryOrderList(this.ruleForm).then(response => {
+            // console.log(response)
+            this.tableData = response.result.rows
+            this.total = response.result.total
+          })
         } else {
-          console.log('error submit!!')
           return false
         }
       })
@@ -409,7 +460,6 @@ export default {
       }
     },
     handleSelectionChange(val) {
-      // console.log(val)
       this.multipleSelection = val
     }
   }
@@ -417,9 +467,26 @@ export default {
 </script>
 
 <style scoped>
-/deep/ .factory-header {
-  padding: 10px;
-  background: lightgray;
-}
-.factory-select {}
+  /deep/ .factory-header {
+    padding: 5px 10px 10px 5px;
+    background: rgba(228,228,228,0.3);
+  }
+  /deep/ .search-form {
+    min-width: 1250px;
+    max-width: 1400px;
+  }
+  .el-row-style /deep/ .el-col{
+    height: 40px;
+  }
+  /deep/ .close-row {
+    color: #F56C6C;
+  }
+  /deep/ .waring-row {
+    color: #E6A23C;
+  }
+  .status-style-class {
+    float: right;
+    line-height: 33px;
+    text-align: center;
+  }
 </style>

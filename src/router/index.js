@@ -71,7 +71,12 @@ export const constantRoutes = [
         path: 'production-order-dispatch',
         name: 'productionOrderDispatchh',
         component: () => import('@/views/production-task/production-order-dispatch/index'),
-        meta: { title: '订单派发', icon: 'example' }
+        meta: { title: '订单下发', icon: 'example' }
+      }, {
+        path: 'order-confirm',
+        name: 'orderConfirm',
+        component: () => import('@/views/production-task/production-order-dispatch/orderConfirm'),
+        meta: { title: '订单确认', icon: 'example' }
       }
     ]
   },

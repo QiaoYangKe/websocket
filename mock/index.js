@@ -6,6 +6,7 @@ import session from './modules/session'
 
 import workCenter from './modules/equipment-management/work-center'
 import productionOrderDispatch from './modules/production-task/production-order-dispatch'
+import orderConfirm from './modules/production-task/order-confirm'
 
 import table from './modules/table'
 
@@ -14,7 +15,8 @@ const mocks = [
   ...session,
   ...workCenter,
   ...table,
-  ...productionOrderDispatch
+  ...productionOrderDispatch,
+  ...orderConfirm
 ]
 
 // for front mock
