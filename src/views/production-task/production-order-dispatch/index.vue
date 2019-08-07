@@ -48,8 +48,8 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="下发分厂" prop="factory" style="margin-left: 50px">
-              <el-select v-model="ruleForm.factory" clearable :loading="branchFactoryListLoading" placeholder="请选择下发分厂" loading-text="加载中..." @change="query()">
+            <el-form-item label="下发分厂" prop="factory" style="margin-left: 58px">
+              <el-select  v-model="ruleForm.factory" clearable :loading="branchFactoryListLoading" placeholder="请选择下发分厂" loading-text="加载中..." @change="query()">
                 <el-option
                   v-for="item in branchFactoryList"
                   :key="item.id"
@@ -147,6 +147,7 @@
             <div v-else-if="item.props === 'factory'">
               <div v-if="!scope.row.showFlag" :id="'span_'+item.id" @click="changeToSelect(scope.row)">{{ scope.row[item.props] }}</div>
               <el-select
+                size="mini"
                 v-else
                 v-model="scope.row.factory"
                 value-key="id"
