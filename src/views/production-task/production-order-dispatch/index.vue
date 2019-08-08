@@ -17,9 +17,9 @@
           :value="item"
         />
       </el-select>
-      <el-button size="mini" type="primary" plain :disabled="orderTranction" @click="changeBranchFactory"><i class="el-icon-notebook-2" /> 批量更改</el-button>
-      <el-button size="mini" type="primary" plain :disabled="orderTranction" @click="confirmDispatchTask"><i class="el-icon-check" /> 确认下发</el-button>
-      <el-button size="mini" type="primary" plain :disabled="!orderTranction" @click="orderTranctionTask"><i class="el-icon-edit" /> 订单转移</el-button>
+      <el-button size="mini" type="primary" plain :disabled="orderTranction" @click="changeBranchFactory"><i class="el-icon-notebook-2">&nbsp;</i> 批量更改</el-button>
+      <el-button size="mini" type="primary" plain :disabled="orderTranction" @click="confirmDispatchTask"><i class="el-icon-check">&nbsp;</i> 确认下发</el-button>
+      <el-button size="mini" type="primary" plain :disabled="!orderTranction" @click="orderTranctionTask"><i class="el-icon-edit">&nbsp;</i> 订单转移</el-button>
       <div class="status-style-class">
         标识：<el-button size="mini" style="background: #F56C6C">关闭</el-button><el-button size="mini" style="background: #E6A23C">更改</el-button>
       </div>

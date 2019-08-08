@@ -1,8 +1,8 @@
 <template>
   <el-container>
     <el-header class="factory-header" height="40px">
-      <el-button size="mini" type="primary" plain @click="confirmOrderTask"><i class="el-icon-check"></i> 确认订单</el-button>
-      <el-button size="mini" type="primary" plain @click="exitOrderTask"><i class="el-icon-close"></i> 退回订单</el-button>
+      <el-button size="mini" type="primary" plain @click="confirmOrderTask"><i class="el-icon-check">&nbsp;</i> 确认订单</el-button>
+      <el-button size="mini" type="primary" plain @click="exitOrderTask"><i class="el-icon-close">&nbsp;</i> 退回订单</el-button>
       <div class="status-style-class">
         标识：<el-button size="mini" style="background: #F56C6C">关闭</el-button><el-button size="mini" style="background: #E6A23C">更改</el-button>
       </div>
@@ -211,27 +211,27 @@ export default {
           width: '120px'
         },
         {
-          props: 'thicknessToleranceDown',
+          props: 'thickLower',
           label: '厚差下'
         },
         {
-          props: 'thicknessToleranceUp',
+          props: 'thickUpper',
           label: '厚差上'
         },
         {
-          props: 'widthToleranceDown',
+          props: 'widthLower',
           label: '宽差下'
         },
         {
-          props: 'widthToleranceUp',
+          props: 'widthUpper',
           label: '宽差上'
         },
         {
-          props: 'LongToleranceDown',
+          props: 'longLower',
           label: '长差下'
         },
         {
-          props: 'LongToleranceUp',
+          props: 'longUpper',
           label: '长差上'
         }],
       rules: {
