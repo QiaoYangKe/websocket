@@ -115,7 +115,7 @@ export default {
         orderNo: undefined,
         dateStart: undefined,
         dateEnd: undefined,
-        confirm: undefined,
+        confirm: false,
         page: 1,
         limit: 10
       },
@@ -283,6 +283,7 @@ export default {
           title: '确认成功',
           type: 'success'
         })
+        this.query()
       })
     },
     exitOrderTask() {
@@ -302,9 +303,10 @@ export default {
       }
       exitOrder(data).then(response => {
         this.$notify({
-          title: '确认成功',
+          title: '退回成功',
           type: 'success'
         })
+        this.query()
       })
     },
     query() {
