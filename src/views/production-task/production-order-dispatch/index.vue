@@ -357,11 +357,6 @@ export default {
       this.query(this.ruleForm)
     },
     changeToSelect(row) {
-      for (let i = 0; i < this.tableData.length; i++) {
-        if (this.tableData[i].showFlag && this.tableData[i].id !== row.id) {
-          this.tableData[i].showFlag = false
-        }
-      }
       row.showFlag = true
     },
     handleBranchFactoryChange(val, row) {
@@ -370,6 +365,11 @@ export default {
       row.showFlag = false
     },
     clickRow(row) {
+      for (let i = 0; i < this.tableData.length; i++) {
+        if (this.tableData[i].showFlag && this.tableData[i].id !== row.id) {
+          this.tableData[i].showFlag = false
+        }
+      }
       this.$refs.orderTable.toggleRowSelection(row)
     },
     confirmDispatchTask() {
