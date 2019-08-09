@@ -133,7 +133,7 @@ export default [
           slices: '@integer(10, 30)',
           'dispatch|1': [0, 1],
           destinationLocation: '@word()',
-          'factoryId|1': [1, 2, 3],
+          'deliveryOrgId|1': [1, 2, 3],
           dispatchDate: Mock.Random.date('T'),
           'confirm|1': [0, 1],
           branchFactoryDate: Mock.Random.date('T'),
