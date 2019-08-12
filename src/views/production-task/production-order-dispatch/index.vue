@@ -147,8 +147,8 @@
             <div v-else-if="item.props === 'specifications'">
               <span>{{ scope.row.length }}*{{ scope.row.width }}*{{ scope.row.thick }}</span>
             </div>
-            <div v-else-if="item.props === 'factoryName'">
-              <div v-if="!scope.row.showFlag" :id="'span_'+item.id" @click="changeToSelect(scope.row)">{{ scope.row[item.props] }}</div>
+            <div v-else-if="item.props === 'factoryName'" @click="changeToSelect(scope.row)">
+              <div v-if="!scope.row.showFlag" :id="'span_'+item.id"> &nbsp; {{ scope.row[item.props] }}</div>
               <el-select
                 v-else
                 v-model="scope.row.factoryName"

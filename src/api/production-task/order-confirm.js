@@ -9,7 +9,7 @@ export function confirmOrder(orders) {
 }
 export function exitOrder(orders) {
   return request({
-    url: '/services/app/BranchFactoryService/exitOrder',
+    url: '/services/app/ProductionOrder/OrderReturn',
     method: 'post',
     data: orders
   })
