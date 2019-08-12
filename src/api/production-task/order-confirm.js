@@ -1,20 +1,22 @@
 import request from '@/utils/request'
 
-export function confirmOrder() {
+export function confirmOrder(orders) {
   return request({
-    url: '/services/app/BranchFactoryService/confirmOrder',
-    method: 'post'
+    url: '/services/app/ProductionOrder/ConfirmOrder',
+    method: 'post',
+    data: orders
   })
 }
-export function exitOrder() {
+export function exitOrder(orders) {
   return request({
     url: '/services/app/BranchFactoryService/exitOrder',
-    method: 'post'
+    method: 'post',
+    data: orders
   })
 }
 export function queryOrderResult(ruleForm) {
   return request({
-    url: '/services/app/BranchFactoryService/queryOrderList',
+    url: '/services/app/ProductionOrder/GetOrderItemConfirmList',
     method: 'get',
     params: ruleForm
   })

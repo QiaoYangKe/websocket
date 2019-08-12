@@ -79,11 +79,14 @@
             <div v-if="item.props === 'branchFactoryDate' || item.props === 'dispatchDate'">
               {{ scope.row[item.props] | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}
             </div>
-            <div v-else-if="item.props === 'finishDate'">
+            <div v-else-if="item.props === 'deliveryDate'">
               {{ scope.row[item.props] | parseTime('{y}-{m}-{d}') }}
             </div>
+            <div v-else-if="item.props === 'specifications'">
+              <span>{{ scope.row.length }}*{{ scope.row.width }}*{{ scope.row.thick }}</span>
+            </div>
             <div v-else-if="item.props === 'confirm'">
-              <span>{{ scope.row.confirm === 1 ? '是' : '否' }}</span>
+              <span>{{ scope.row.confirm ? '是' : '否' }}</span>
             </div>
             <div v-else>
               <span>{{ scope.row[item.props] }}</span>
@@ -124,25 +127,26 @@ export default {
           props: 'confirm',
           label: '确认',
           width: '60px',
-          align: 'center'
+          align: 'center',
+          fixed: true
         },
         {
-          props: 'orderNo',
+          props: 'orderOrderNo',
           label: '合同编号',
           width: '120px'
         },
         {
           props: 'changeReason',
           label: '变更理由',
-          width: '240px'
+          width: '150px'
         },
         {
-          props: 'salesman',
+          props: 'orderSalesmanName',
           label: '业务员',
-          width: '120px'
+          width: '80px'
         },
         {
-          props: 'factory',
+          props: 'factoryName',
           label: '下发分厂',
           width: '120px',
           fixed: true
@@ -150,35 +154,38 @@ export default {
         {
           props: 'dispatchDate',
           label: '下发时间',
-          width: '120px'
+          width: '150px',
+          align: 'center'
         },
         {
           props: 'branchFactoryDate',
           label: '确认时间',
-          width: '120px'
+          width: '150px',
+          align: 'center'
         },
 
         {
-          props: 'production',
+          props: 'productName',
           label: '产品名称',
           width: '120px'
         },
         {
-          props: 'purpose',
+          props: 'useName',
           label: '用途'
         },
         {
-          props: 'alloyGrade',
+          props: 'alloyGradeName',
           label: '合金牌号'
         },
         {
-          props: 'alloyTemper',
+          props: 'alloyTemperName',
           label: '合金状态'
         },
         {
           props: 'specifications',
           label: '规格',
-          width: '120px'
+          width: '120px',
+          align: 'center'
         },
         {
           props: 'number',
@@ -191,9 +198,10 @@ export default {
           width: '60px'
         },
         {
-          props: 'finishDate',
+          props: 'deliveryDate',
           label: '交货日期',
-          width: '120px'
+          width: '120px',
+          align: 'center'
         },
         {
           props: 'note',
@@ -206,33 +214,45 @@ export default {
           width: '120px'
         },
         {
-          props: 'storageTolerance',
+          props: 'toleranceNote',
           label: '入库容差',
-          width: '120px'
+          width: '100px'
         },
         {
           props: 'thickLower',
-          label: '厚差下'
+          label: '厚差下',
+          width: '70px',
+          align: 'center'
         },
         {
           props: 'thickUpper',
-          label: '厚差上'
+          label: '厚差上',
+          width: '70px',
+          align: 'center'
         },
         {
           props: 'widthLower',
-          label: '宽差下'
+          label: '宽差下',
+          width: '70px',
+          align: 'center'
         },
         {
           props: 'widthUpper',
-          label: '宽差上'
+          label: '宽差上',
+          width: '70px',
+          align: 'center'
         },
         {
-          props: 'longLower',
-          label: '长差下'
+          props: 'lengthLower',
+          label: '长差下',
+          width: '70px',
+          align: 'center'
         },
         {
-          props: 'longUpper',
-          label: '长差上'
+          props: 'lengthUpper',
+          label: '长差上',
+          width: '70px',
+          align: 'center'
         }],
       rules: {
         orderNo: [
@@ -249,13 +269,13 @@ export default {
     }
   },
   mounted() {
-    this.query(this.ruleForm)
+    this.query()
   },
   methods: {
     tableRowClassName({ row, rowIndex }) {
-      if (row.status === 1) {
+      if (row.state === 1) {
         return 'close-row'
-      } else if (row.status === 2) {
+      } else if (row.orderRevised) {
         return 'waring-row'
       }
       return ''
@@ -274,8 +294,8 @@ export default {
       const temp = this.multipleSelection
       for (let i = 0; i < temp.length; i++) {
         data.push({
-          id: temp.id,
-          factoryId: temp.factoryId
+          id: temp[i].id,
+          factoryId: temp[i].factoryId
         })
       }
       confirmOrder(data).then(response => {
@@ -297,8 +317,7 @@ export default {
       const temp = this.multipleSelection
       for (let i = 0; i < temp.length; i++) {
         data.push({
-          id: temp.id,
-          factoryId: temp.factoryId
+          id: temp[i].id
         })
       }
       exitOrder(data).then(response => {
@@ -314,8 +333,8 @@ export default {
         if (valid) {
           queryOrderResult(this.ruleForm).then(response => {
             // console.log(response)
-            this.tableData = response.result.rows
-            this.total = response.result.total
+            this.tableData = response.result.items
+            this.total = response.result.totalCount
           })
         } else {
           console.log('error submit!!')

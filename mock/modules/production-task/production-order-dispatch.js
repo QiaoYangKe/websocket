@@ -66,7 +66,7 @@ const orderSourceList = [{
 //   }]
 export default [
   {
-    url: '/services/app/BranchFactoryService/getBranchFactoryList',
+    url: '/services/app/FactoryService/GetAllFactory',
     type: 'get',
     response: config => {
       return {
@@ -90,7 +90,7 @@ export default [
       }
     }
   }, {
-    url: '/services/app/BranchFactoryService/confirmDispatch',
+    url: '/services/app/ProductionOrder/ConfirmDispatch',
     type: 'post',
     response: config => {
       return {
@@ -102,7 +102,7 @@ export default [
       }
     }
   }, {
-    url: '/services/app/BranchFactoryService/getOrderSourceList',
+    url: '/services/app/SalesGroupService/GetAllSalesGroup',
     type: 'get',
     response: config => {
       return {
@@ -114,8 +114,8 @@ export default [
       }
     }
   }, {
-    url: '/services/app/BranchFactoryService/queryOrderList',
-    type: 'get',
+    url: '/services/app/ProductionOrder/GetOrderItemList',
+    type: 'post',
     response: config => {
       const tableData = Mock.mock({
         'data|20': [{

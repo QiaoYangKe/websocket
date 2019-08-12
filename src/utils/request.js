@@ -14,7 +14,6 @@ const service = axios.create({
 service.interceptors.request.use(
   config => {
     // do something before request is sent
-
     if (store.getters.accessToken) {
       // let each request carry token
       // ['Authorization'] is a custom headers key

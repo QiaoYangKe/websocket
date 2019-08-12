@@ -48,8 +48,8 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="下发分厂" prop="deliveryOrgId" style="margin-left: 58px">
-              <el-select v-model="ruleForm.deliveryOrgId" clearable :loading="branchFactoryListLoading" placeholder="请选择下发分厂" loading-text="加载中..." @change="query()">
+            <el-form-item label="下发分厂" prop="FactoryId" style="margin-left: 58px">
+              <el-select v-model="ruleForm.FactoryId" clearable :loading="branchFactoryListLoading" placeholder="请选择下发分厂" loading-text="加载中..." @change="query()">
                 <el-option
                   v-for="item in branchFactoryList"
                   :key="item.id"
@@ -92,7 +92,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="5">
-            <el-form-item label="是否确认" prop="confirm" @change="query()">
+            <el-form-item label="是否确认" prop="confirm" @change="confirmChange(ruleForm.confirm)">
               <el-select v-model="ruleForm.confirm" clearable placeholder="请选择">
                 <el-option label="是" :value="true" />
                 <el-option label="否" :value="false" />
@@ -135,20 +135,23 @@
             <div v-if="item.props === 'branchFactoryDate' || item.props === 'dispatchDate'">
               {{ scope.row[item.props] | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}
             </div>
-            <div v-else-if="item.props === 'finishDate'">
+            <div v-else-if="item.props === 'deliveryDate'">
               {{ scope.row[item.props] | parseTime('{y}-{m}-{d}') }}
             </div>
             <div v-else-if="item.props === 'confirm'">
-              <span>{{ scope.row.confirm === 1 ? '是' : '否' }}</span>
+              <span>{{ scope.row.confirm ? '是' : '否' }}</span>
             </div>
             <div v-else-if="item.props === 'dispatch'">
-              <span>{{ scope.row.dispatch === 1 ? '是' : '否' }}</span>
+              <span>{{ scope.row.dispatch ? '是' : '否' }}</span>
             </div>
-            <div v-else-if="item.props === 'factory'">
+            <div v-else-if="item.props === 'specifications'">
+              <span>{{ scope.row.length }}*{{ scope.row.width }}*{{ scope.row.thick }}</span>
+            </div>
+            <div v-else-if="item.props === 'factoryName'">
               <div v-if="!scope.row.showFlag" :id="'span_'+item.id" @click="changeToSelect(scope.row)">{{ scope.row[item.props] }}</div>
               <el-select
                 v-else
-                v-model="scope.row.factory"
+                v-model="scope.row.factoryName"
                 size="mini"
                 value-key="id"
                 :loading="branchFactoryListLoading"
@@ -210,12 +213,12 @@ export default {
       tableData: [],
       ruleForm: {
         orderNo: undefined,
-        deliveryOrgId: undefined,
+        factoryId: undefined,
         dateStart: undefined,
         dateEnd: undefined,
         alloyGrade: undefined,
         orderSource: undefined,
-        dispatch: undefined,
+        dispatch: false,
         confirm: undefined,
         page: 1,
         limit: 10
@@ -238,51 +241,52 @@ export default {
       },
       cols: [
         {
-          props: 'factory',
+          props: 'factoryName',
           label: '下发分厂',
           width: '120px',
           fixed: true
         },
         {
-          props: 'deliveryOrganization',
+          props: 'deliveryOrgName',
           label: '发货组织',
           width: '120px'
         },
         {
-          props: 'salesman',
+          props: 'orderSalesmanName',
           label: '业务员',
           width: '120px'
         },
         {
-          props: 'production',
+          props: 'productName',
           label: '产品名称',
           width: '120px'
         },
         {
-          props: 'orderNo',
+          props: 'orderOrderNo',
           label: '合同编号',
           width: '120px'
         },
         {
-          props: 'purpose',
+          props: 'useName',
           label: '用途'
         },
         {
-          props: 'alloyGrade',
+          props: 'alloyGradeName',
           label: '合金牌号'
         },
         {
-          props: 'alloyTemper',
+          props: 'alloyTemperName',
           label: '状态',
-          width: '120px'
+          width: '80px'
         },
         {
           props: 'specifications',
           label: '规格',
-          width: '120px'
+          width: '120px',
+          align: 'center'
         },
         {
-          props: 'number',
+          props: 'quantity',
           label: '数量',
           width: '60px'
         },
@@ -298,14 +302,15 @@ export default {
           align: 'center'
         },
         {
-          props: 'destinationLocation',
+          props: 'orderRegion',
           label: '目的港',
           width: '120px'
         },
         {
           props: 'dispatchDate',
           label: '下发时间',
-          width: '120px'
+          width: '150px',
+          align: 'center'
         },
         {
           props: 'confirm',
@@ -316,25 +321,27 @@ export default {
         {
           props: 'branchFactoryDate',
           label: '分厂确认时间',
-          width: '120px'
+          width: '150px',
+          align: 'center'
         },
         {
-          props: 'finishDate',
+          props: 'deliveryDate',
           label: '交货日期',
-          width: '120px'
+          width: '120px',
+          align: 'center'
         }]
     }
   },
   mounted() {
     this.branchFactoryListInit()
     this.orderSourceInit()
-    this.query(this.ruleForm)
+    this.query()
   },
   methods: {
     tableRowClassName({ row, rowIndex }) {
-      if (row.status === 1) {
+      if (row.state === 1) {
         return 'close-row'
-      } else if (row.status === 2) {
+      } else if (row.revised) {
         return 'waring-row'
       }
       return ''
@@ -356,13 +363,19 @@ export default {
       this.orderTranction = val
       this.query(this.ruleForm)
     },
+    confirmChange(val) {
+      this.ruleForm.confirm = val
+      this.query(this.ruleForm)
+    },
     changeToSelect(row) {
+      // console.log(row)
       row.showFlag = true
     },
     handleBranchFactoryChange(val, row) {
-      row.factoryId = val.id
-      row.factory = val.name
+      console.log(val)
       row.showFlag = false
+      row.factoryName = val.name
+      row.factoryId = val.id
     },
     clickRow(row) {
       for (let i = 0; i < this.tableData.length; i++) {
@@ -383,8 +396,8 @@ export default {
       const temp = this.multipleSelection
       for (let i = 0; i < temp.length; i++) {
         data.push({
-          id: temp.id,
-          deliveryOrgId: temp.deliveryOrgId
+          id: temp[i].id,
+          factoryId: temp[i].factoryId
         })
       }
       confirmDispatch(data).then(response => {
@@ -405,8 +418,8 @@ export default {
       const temp = this.multipleSelection
       for (let i = 0; i < temp.length; i++) {
         data.push({
-          id: temp.id,
-          deliveryOrgId: temp.deliveryOrgId
+          id: temp[i].id,
+          factoryId: temp[i].factoryId
         })
       }
       orderTranction(data).then(response => {
@@ -421,8 +434,8 @@ export default {
         if (valid) {
           queryOrderList(this.ruleForm).then(response => {
             // console.log(response)
-            this.tableData = response.result.rows
-            this.total = response.result.total
+            this.tableData = response.result.items
+            this.total = Number(response.result.totalCount)
           })
         } else {
           return false
@@ -444,8 +457,10 @@ export default {
         })
         return
       }
+      console.log(this.branchFactory)
       for (let i = 0; i < this.multipleSelection.length; i++) {
-        this.multipleSelection[i].factory = this.branchFactory.name
+        this.multipleSelection[i].factoryName = this.branchFactory.name
+        this.multipleSelection[i].factoryId = this.branchFactory.id
       }
     },
     resetForm(formName) {
