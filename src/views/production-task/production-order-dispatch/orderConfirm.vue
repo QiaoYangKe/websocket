@@ -1,6 +1,6 @@
 <template>
   <el-container>
-    <el-header class="factory-header search-form" height="40px">
+    <el-header class="factory-header" style="min-width: 1250px;" height="40px">
       <el-button size="mini" type="primary" plain @click="confirmOrderTask"><i class="el-icon-check">&nbsp;</i> 确认订单</el-button>
       <el-button size="mini" type="primary" plain @click="exitOrderTask"><i class="el-icon-close">&nbsp;</i> 退回订单</el-button>
       <div class="status-style-class">
@@ -11,7 +11,7 @@
       <el-form ref="orderConfirmRuleForm" size="mini" :model="ruleForm" :rules="rules" label-width="100px" class="demo-ruleForm search-form">
         <el-row :gutter="10" style="width: 100%" class="el-row-style">
           <el-col :span="9">
-            <el-form-item label="订单日期" required>
+            <el-form-item label="制单日期" required>
               <el-col :span="11">
                 <el-form-item prop="dateStart">
                   <el-date-picker v-model="ruleForm.dateStart" type="date" placeholder="开始日期" style="width: 100%;" />
@@ -113,7 +113,7 @@ export default {
   data() {
     return {
       total: 0,
-      tableHeight: window.innerHeight - 280,
+      tableHeight: window.fullHeight - 205,
       multipleSelection: [],
       tableData: [],
       ruleForm: {
@@ -281,7 +281,7 @@ export default {
     window.onresize = () => {
       return (() => {
         window.fullHeight = document.documentElement.clientHeight
-        this.tableHeight = window.fullHeight - 280
+        this.tableHeight = window.fullHeight - 205
       })()
     }
     this.query()
@@ -398,6 +398,7 @@ export default {
   }
 .status-style-class {
   float: right;
+  margin-right: 25px;
   line-height: 33px;
   text-align: center;
 }
