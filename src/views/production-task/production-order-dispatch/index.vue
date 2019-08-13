@@ -1,6 +1,6 @@
 <template>
   <el-container>
-    <el-header class="factory-header" height="40px">
+    <el-header class="factory-header search-form" height="40px">
       <el-select
         v-model="branchFactory"
         size="mini"
@@ -24,7 +24,7 @@
         标识：<el-button size="mini" style="background: #F56C6C">关闭</el-button><el-button size="mini" style="background: #E6A23C">更改</el-button>
       </div>
     </el-header>
-    <el-main>
+    <el-main style="overflow: hidden">
       <el-form ref="ruleForm" size="mini" :model="ruleForm" :rules="rules" label-width="100px" class="demo-ruleForm search-form">
         <el-row :gutter="10" style="width: 100%" class="el-row-style">
           <el-col :span="10">
@@ -112,6 +112,7 @@
         tooltip-effect="dark"
         style="width: 100%"
         :row-class-name="tableRowClassName"
+        :height="tableHeight"
         border
         @selection-change="handleSelectionChange"
         @row-click="clickRow"
@@ -185,15 +186,6 @@ import Pagination from '@/components/Pagination/index.vue'
 export default {
   name: 'ProductionOrderDispatch',
   filters: {
-    // 状态行
-    // statusFilter(status) {
-    //   const statusMap = {
-    //     published: 'success',
-    //     draft: 'info',
-    //     deleted: 'danger'
-    //   }
-    //   return statusMap[status]
-    // },
     parseTime
   },
   components: { Pagination },
@@ -207,6 +199,7 @@ export default {
       total: 0,
       multipleSelection: [],
       orderTranction: false,
+      tableHeight: window.innerHeight - 280,
       branchFactoryListLoading: true,
       orderSourceLoading: true,
       orderSourceList: [],
@@ -332,10 +325,23 @@ export default {
         }]
     }
   },
+  watch: {
+    fullHeight(val) {
+      if (!this.tableHeight) {
+        this.tableHeight = val
+      }
+    }
+  },
   mounted() {
     this.branchFactoryListInit()
     this.orderSourceInit()
     this.query()
+    window.onresize = () => {
+      return (() => {
+        window.fullHeight = document.documentElement.clientHeight
+        this.tableHeight = window.fullHeight - 280
+      })()
+    }
   },
   methods: {
     tableRowClassName({ row, rowIndex }) {
@@ -368,11 +374,9 @@ export default {
       this.query(this.ruleForm)
     },
     changeToSelect(row) {
-      // console.log(row)
       row.showFlag = true
     },
     handleBranchFactoryChange(val, row) {
-      console.log(val)
       row.showFlag = false
       row.factoryName = val.name
       row.factoryId = val.id
@@ -488,8 +492,9 @@ export default {
     background: rgba(228,228,228,0.3);
   }
   /deep/ .search-form {
-    min-width: 1250px;
+    min-width: 1300px;
     max-width: 1400px;
+    overflow: hidden;
   }
   .el-row-style /deep/ .el-col{
     height: 40px;

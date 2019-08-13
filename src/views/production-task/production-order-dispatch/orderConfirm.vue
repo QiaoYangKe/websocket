@@ -1,13 +1,13 @@
 <template>
   <el-container>
-    <el-header class="factory-header" height="40px">
+    <el-header class="factory-header search-form" height="40px">
       <el-button size="mini" type="primary" plain @click="confirmOrderTask"><i class="el-icon-check">&nbsp;</i> 确认订单</el-button>
       <el-button size="mini" type="primary" plain @click="exitOrderTask"><i class="el-icon-close">&nbsp;</i> 退回订单</el-button>
       <div class="status-style-class">
         标识：<el-button size="mini" style="background: #F56C6C">关闭</el-button><el-button size="mini" style="background: #E6A23C">更改</el-button>
       </div>
     </el-header>
-    <el-main>
+    <el-main style="overflow: hidden">
       <el-form ref="orderConfirmRuleForm" size="mini" :model="ruleForm" :rules="rules" label-width="100px" class="demo-ruleForm search-form">
         <el-row :gutter="10" style="width: 100%" class="el-row-style">
           <el-col :span="9">
@@ -56,6 +56,7 @@
         tooltip-effect="dark"
         style="width: 100%"
         :row-class-name="tableRowClassName"
+        :height="tableHeight"
         border
         @selection-change="handleSelectionChange"
         @row-click="clickRow"
@@ -112,6 +113,7 @@ export default {
   data() {
     return {
       total: 0,
+      tableHeight: window.innerHeight - 280,
       multipleSelection: [],
       tableData: [],
       ruleForm: {
@@ -268,7 +270,20 @@ export default {
       }
     }
   },
+  watch: {
+    fullHeight(val) {
+      if (!this.tableHeight) {
+        this.tableHeight = val
+      }
+    }
+  },
   mounted() {
+    window.onresize = () => {
+      return (() => {
+        window.fullHeight = document.documentElement.clientHeight
+        this.tableHeight = window.fullHeight - 280
+      })()
+    }
     this.query()
   },
   methods: {
@@ -370,6 +385,7 @@ export default {
   /deep/ .search-form {
     min-width: 1250px;
     max-width: 1400px;
+    overflow: hidden;
   }
   /deep/ .close-row {
     color: #F56C6C;
