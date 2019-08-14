@@ -53,8 +53,8 @@
             </el-form-item>
           </el-col>
           <el-col :span="5">
-            <el-form-item label="订单来源" prop="orderSource" @change="query()">
-              <el-select v-model="productionOrderForm.orderSource" clearable :loading="orderSourceLoading" placeholder="请选择订单来源" loading-text="加载中...">
+            <el-form-item label="订单来源" prop="SalesGroupIds" @change="query()">
+              <el-select v-model="productionOrderForm.SalesGroupIds" clearable multiple :loading="orderSourceLoading" placeholder="请选择订单来源" loading-text="加载中...">
                 <el-option
                   v-for="item in orderSourceList"
                   :key="item.id"
@@ -73,8 +73,8 @@
             </el-form-item>
           </el-col>
           <el-col :span="5">
-            <el-form-item label="业务员" prop="salesMan">
-              <el-input v-model="productionOrderForm.salesMan" />
+            <el-form-item label="业务员" prop="SalesmanName">
+              <el-input v-model="productionOrderForm.SalesmanName" />
             </el-form-item>
           </el-col>
           <el-col :span="1">
@@ -190,11 +190,11 @@ export default {
       tableData: [],
       productionOrderForm: {
         orderNo: undefined,
-        salesMan: undefined,
+        SalesmanName: undefined,
         dateStart: undefined,
         dateEnd: undefined,
         clientName: undefined,
-        orderSource: undefined,
+        SalesGroupIds: undefined,
         revised: undefined,
         page: 1,
         limit: 10
@@ -233,8 +233,9 @@ export default {
           width: '120px'
         },
         {
-          props: 'itemsQuantity',
-          label: '数量'
+          props: 'quantity',
+          label: '数量',
+          width: '100px'
         },
         {
           props: 'salesmanName',
@@ -243,42 +244,37 @@ export default {
         },
         {
           props: 'clientName',
-          label: '销售客户'
+          label: '销售客户',
+          width: '200px'
         },
         {
           props: 'salesGroupName',
           label: '订单来源'
         },
         {
-          props: 'paymentName',
-          label: '付款方式'
-        },
-        {
           props: 'creatorUserName',
-          label: '制单人'
+          label: '制单人',
+          width: '80px'
         },
         {
           props: 'processNote',
           label: '技术要求',
-          width: '80px'
+          width: '250px'
         },
         {
           props: 'packingNote',
           label: '包装要求',
-          align: 'center'
+          width: '250px'
         },
         {
           props: 'pecialNote',
-          label: '特殊要求'
+          label: '特殊要求',
+          width: '250px'
         },
         {
           props: 'region',
-          label: '到货地点'
-        },
-        {
-          props: 'id',
-          label: '单据编号',
-          width: '120px'
+          label: '到货地点',
+          width: '250px'
         }]
     }
   },
