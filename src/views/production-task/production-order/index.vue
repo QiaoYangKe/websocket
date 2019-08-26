@@ -366,6 +366,7 @@ export default {
       }
     },
     query() {
+      console.log(this.productionOrderForm)
       this.$refs.productionOrderForm.validate((valid) => {
         if (valid) {
           queryProductionOrder(this.productionOrderForm).then(response => {

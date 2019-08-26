@@ -72,8 +72,8 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="订单来源" prop="orderSource" @change="query()">
-              <el-select v-model="ruleForm.orderSource" clearable :loading="orderSourceLoading" placeholder="请选择订单来源" loading-text="加载中...">
+            <el-form-item label="订单来源" prop="orderSource">
+              <el-select v-model="ruleForm.salesGroupIds" :loading="orderSourceLoading" clearable multiple placeholder="请选择订单来源" loading-text="加载中...">
                 <el-option
                   v-for="item in orderSourceList"
                   :key="item.id"
@@ -133,10 +133,13 @@
           :show-overflow-tooltip="true"
         >
           <template slot-scope="scope">
-            <div v-if="item.props === 'branchFactoryDate' || item.props === 'dispatchDate'">
+            <div v-if="item.props === 'branchFactoryDate' && scope.row[item.props] != null">
               {{ scope.row[item.props] | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}
             </div>
-            <div v-else-if="item.props === 'deliveryDate'">
+            <div v-else-if="item.props === 'branchFactoryDate' && scope.row[item.props] != null">
+              {{ scope.row[item.props] | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}
+            </div>
+            <div v-else-if="item.props === 'deliveryDate' && scope.row[item.props] != null">
               {{ scope.row[item.props] | parseTime('{y}-{m}-{d}') }}
             </div>
             <div v-else-if="item.props === 'confirm'">
@@ -199,7 +202,7 @@ export default {
       total: 0,
       multipleSelection: [],
       orderTranction: false,
-      tableHeight: window.innerHeight - 245,
+      tableHeight: document.documentElement.clientHeight - 245,
       branchFactoryListLoading: true,
       orderSourceLoading: true,
       orderSourceList: [],
@@ -210,7 +213,7 @@ export default {
         dateStart: undefined,
         dateEnd: undefined,
         alloyGrade: undefined,
-        orderSource: undefined,
+        salesGroupIds: undefined,
         dispatch: false,
         confirm: undefined,
         page: 1,
@@ -240,7 +243,7 @@ export default {
           fixed: true
         },
         {
-          props: 'deliveryOrgName',
+          props: 'productionOrgName',
           label: '发货组织',
           width: '120px'
         },
@@ -284,7 +287,7 @@ export default {
           width: '60px'
         },
         {
-          props: 'slices',
+          props: 'auxiliaryQuantity',
           label: '片数',
           width: '60px'
         },
@@ -300,7 +303,7 @@ export default {
           width: '120px'
         },
         {
-          props: 'dispatchDate',
+          props: 'branchFactoryDate',
           label: '下发时间',
           width: '150px',
           align: 'center'
@@ -312,7 +315,7 @@ export default {
           align: 'center'
         },
         {
-          props: 'branchFactoryDate',
+          props: 'confirmDate',
           label: '分厂确认时间',
           width: '150px',
           align: 'center'
@@ -347,7 +350,7 @@ export default {
     tableRowClassName({ row, rowIndex }) {
       if (row.state === 1) {
         return 'close-row'
-      } else if (row.revised) {
+      } else if (row.orderRevised) {
         return 'waring-row'
       }
       return ''
@@ -367,11 +370,10 @@ export default {
     },
     dispatchChange(val) {
       this.orderTranction = val
-      this.query(this.ruleForm)
+      this.query()
     },
     confirmChange(val) {
       this.ruleForm.confirm = val
-      this.query(this.ruleForm)
     },
     changeToSelect(row) {
       row.showFlag = true

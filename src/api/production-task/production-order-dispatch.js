@@ -30,7 +30,7 @@ export function getOrderSourceList() {
 export function queryOrderList(ruleForm) {
   return request({
     url: '/services/app/ProductionOrder/GetOrderItemList',
-    method: 'get',
-    params: ruleForm
+    method: 'post',
+    data: ruleForm
   })
 }

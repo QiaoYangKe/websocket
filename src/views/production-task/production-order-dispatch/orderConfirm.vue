@@ -54,7 +54,6 @@
         ref="orderConfirmTable"
         :data="tableData"
         tooltip-effect="dark"
-        style="width: 100%"
         :row-class-name="tableRowClassName"
         :height="tableHeight"
         border
@@ -77,10 +76,13 @@
           :show-overflow-tooltip="true"
         >
           <template slot-scope="scope">
-            <div v-if="item.props === 'branchFactoryDate' || item.props === 'dispatchDate'">
+            <div v-if="item.props === 'branchFactoryDate' && scope.row[item.props] != null">
               {{ scope.row[item.props] | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}
             </div>
-            <div v-else-if="item.props === 'deliveryDate'">
+            <div v-else-if="item.props === 'dispatchDate' && scope.row[item.props] != null">
+              {{ scope.row[item.props] | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}
+            </div>
+            <div v-else-if="item.props === 'deliveryDate' && scope.row[item.props] != null">
               {{ scope.row[item.props] | parseTime('{y}-{m}-{d}') }}
             </div>
             <div v-else-if="item.props === 'specifications'">
@@ -113,7 +115,7 @@ export default {
   data() {
     return {
       total: 0,
-      tableHeight: window.fullHeight - 205,
+      tableHeight: document.documentElement.clientHeight - 205,
       multipleSelection: [],
       tableData: [],
       ruleForm: {
@@ -150,8 +152,7 @@ export default {
         {
           props: 'factoryName',
           label: '下发分厂',
-          width: '120px',
-          fixed: true
+          width: '120px'
         },
         {
           props: 'dispatchDate',
@@ -190,12 +191,12 @@ export default {
           align: 'center'
         },
         {
-          props: 'number',
+          props: 'quantity',
           label: '数量',
           width: '60px'
         },
         {
-          props: 'slices',
+          props: 'auxiliaryQuantity',
           label: '片数',
           width: '60px'
         },
