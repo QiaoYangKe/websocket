@@ -5,7 +5,6 @@ Vue.use(Router)
 
 /* Layout */
 import Layout from '@/layout'
-
 /**
  * Note: sub-menu only appear when route children.length >= 1
  * Detail see: https://panjiachen.github.io/vue-element-admin-site/guide/essentials/router-and-nav.html
@@ -69,19 +68,29 @@ export const constantRoutes = [
         meta: { title: '成品派工', icon: 'example' }
       }, {
         path: 'production-order-dispatch',
-        name: 'productionOrderDispatchh',
+        name: 'ProductionOrderDispatchh',
         component: () => import('@/views/production-task/production-order-dispatch/index'),
         meta: { title: '订单下发', icon: 'example' }
       }, {
         path: 'order-confirm',
-        name: 'orderConfirm',
+        name: 'OrderConfirm',
         component: () => import('@/views/production-task/production-order-dispatch/orderConfirm'),
         meta: { title: '订单确认', icon: 'example' }
       }, {
         path: 'production-order',
-        name: 'orderConfirm',
+        name: 'ProductionOrder',
         component: () => import('@/views/production-task/production-order/index'),
         meta: { title: '生产任务', icon: 'example' }
+      }, {
+        path: 'java-websocket',
+        name: 'JavaWebSocket',
+        component: () => import('@/views/websocket/index'),
+        meta: { title: 'javaWebsocket', icon: 'example' }
+      }, {
+        path: 'net-websocket',
+        name: 'NetWebSocket',
+        component: () => import('@/views/websocket/netSocket'),
+        meta: { title: 'netWebsocket', icon: 'example' }
       }
     ]
   },
